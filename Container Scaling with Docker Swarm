@@ -1,0 +1,31 @@
+root@DESKTOP-F572NSO:~# docker service create -p 8080:8080 --name bootcamp jocatalin/kubernetes-bootcamp:v1
+snmst1o07qj6kl76tlmslg53v
+overall progress: 1 out of 1 tasks
+1/1: running
+verify: Service converged
+root@DESKTOP-F572NSO:~# docker service ls
+ID             NAME        MODE         REPLICAS   IMAGE                              PORTS
+snmst1o07qj6   bootcamp    replicated   1/1        jocatalin/kubernetes-bootcamp:v1   *:8080->8080/tcp
+54qjcg3plpry   webserver   replicated   1/1        phpcode:latest                     *:80->80/tcp
+root@DESKTOP-F572NSO:~# docker service ps bootcamp
+ID             NAME         IMAGE                              NODE             DESIRED STATE   CURRENT STATE            ERROR     PORTS
+kpw17ra5dkc5   bootcamp.1   jocatalin/kubernetes-bootcamp:v1   docker-desktop   Running         Running 13 minutes ago
+root@DESKTOP-F572NSO:~# curl localhost:8080
+curl: (7) Failed to connect to localhost port 8080 after 0 ms: Connection refused
+root@DESKTOP-F572NSO:~# curl localhost:8080
+curl: (7) Failed to connect to localhost port 8080 after 11 ms: Connection refused
+root@DESKTOP-F572NSO:~# docker service scale bootcamp=3
+bootcamp scaled to 3
+overall progress: 3 out of 3 tasks
+1/3: running
+2/3: running
+3/3: running
+verify: Service converged
+root@DESKTOP-F572NSO:~# docker service ps bootcamp
+ID             NAME         IMAGE                              NODE             DESIRED STATE   CURRENT STATE                ERROR     PORTS
+kpw17ra5dkc5   bootcamp.1   jocatalin/kubernetes-bootcamp:v1   docker-desktop   Running         Running 31 minutes ago
+ug0y3jpk5gpa   bootcamp.2   jocatalin/kubernetes-bootcamp:v1   docker-desktop   Running         Running about a minute ago
+oywv053ae2yv   bootcamp.3   jocatalin/kubernetes-bootcamp:v1   docker-desktop   Running         Running about a minute ago
+root@DESKTOP-F572NSO:~# curl localhost:8080
+curl: (7) Failed to connect to localhost port 8080 after 0 ms: Connection refused
+root@DESKTOP-F572NSO:~#
