@@ -1,0 +1,107 @@
+root@DESKTOP-F572NSO:~# git clone https://github.com/Anuj1990/Docker.git
+Cloning into 'Docker'...
+remote: Enumerating objects: 133, done.
+remote: Counting objects: 100% (67/67), done.
+remote: Compressing objects: 100% (46/46), done.
+remote: Total 133 (delta 25), reused 0 (delta 0), pack-reused 66
+Receiving objects: 100% (133/133), 58.00 KiB | 427.00 KiB/s, done.
+Resolving deltas: 100% (54/54), done.
+root@DESKTOP-F572NSO:~# docker build -t phpcode .
+[+] Building 1.8s (2/2) FINISHED
+ => [internal] load build definition from Dockerfile                                                   1.3s
+ => => transferring dockerfile: 2B                                                                     0.0s
+ => [internal] load .dockerignore                                                                      1.7s
+ => => transferring context: 2B                                                                        0.0s
+failed to solve with frontend dockerfile.v0: failed to read dockerfile: open /var/lib/docker/tmp/buildkit-mount400530565/Dockerfile: no such file or directory
+root@DESKTOP-F572NSO:~# docker build -t phpcode . -f Dockerfile
+[+] Building 0.9s (2/2) FINISHED
+ => [internal] load build definition from Dockerfile                                                   0.5s
+ => => transferring dockerfile: 2B                                                                     0.0s
+ => [internal] load .dockerignore                                                                      0.7s
+ => => transferring context: 2B                                                                        0.0s
+failed to solve with frontend dockerfile.v0: failed to read dockerfile: open /var/lib/docker/tmp/buildkit-mount1404458453/Dockerfile: no such file or directory
+root@DESKTOP-F572NSO:~# cd Docker
+root@DESKTOP-F572NSO:~/Docker# docker build -t phpcode .
+[+] Building 623.1s (13/13) FINISHED
+ => [internal] load build definition from Dockerfile                                                   0.5s
+ => => transferring dockerfile: 551B                                                                   0.0s
+ => [internal] load .dockerignore                                                                      0.8s
+ => => transferring context: 2B                                                                        0.0s
+ => [internal] load metadata for docker.io/library/ubuntu:latest                                      18.0s
+ => [auth] library/ubuntu:pull token for registry-1.docker.io                                          0.0s
+ => [1/7] FROM docker.io/library/ubuntu:latest@sha256:35fb073f9e56eb84041b0745cb714eff0f7b225ea9e024  21.9s
+ => => resolve docker.io/library/ubuntu:latest@sha256:35fb073f9e56eb84041b0745cb714eff0f7b225ea9e024f  0.3s
+ => => sha256:35fb073f9e56eb84041b0745cb714eff0f7b225ea9e024f703cab56aaa5c7720 1.42kB / 1.42kB         0.0s
+ => => sha256:a8fe6fd30333dc60fc5306982a7c51385c2091af1e0ee887166b40a905691fd0 529B / 529B             0.0s
+ => => sha256:216c552ea5ba7b0e3f6e33624e129981c39996021403518019d19b8843c27cbc 1.46kB / 1.46kB         0.0s
+ => => sha256:cf92e523b49ea3d1fae59f5f082437a5f96c244fda6697995920142ff31d59cf 30.43MB / 30.43MB      14.0s
+ => => extracting sha256:cf92e523b49ea3d1fae59f5f082437a5f96c244fda6697995920142ff31d59cf              3.8s
+ => [internal] load build context                                                                      1.0s
+ => => transferring context: 153.31kB                                                                  0.1s
+ => [2/7] RUN apt-get update -y                                                                      125.3s
+ => [3/7] RUN apt-get install -y git curl apache2 php libapache2-mod-php php-mysql                   440.9s
+ => [4/7] RUN rm -rf /var/www/html/*                                                                   2.6s
+ => [5/7] ADD src /var/www/html/                                                                       1.4s
+ => [6/7] RUN a2enmod rewrite                                                                          2.8s
+ => [7/7] RUN chown -R www-data:www-data /var/www/html                                                 2.8s
+ => exporting to image                                                                                 5.0s
+ => => exporting layers                                                                                4.9s
+ => => writing image sha256:ed9e8ec6756ba1d6dc9c3ecdbfc50695f4ef0ce0a4f7fdeae042f5d0d59e79f4           0.1s
+ => => naming to docker.io/library/phpcode                                                             0.1s
+
+Use 'docker scan' to run Snyk tests against images to find vulnerabilities and learn how to fix them
+root@DESKTOP-F572NSO:~/Docker# docker images
+REPOSITORY                       TAG       IMAGE ID       CREATED          SIZE
+phpcode                          latest    ed9e8ec6756b   12 minutes ago   271MB
+springimage                      0.1       e8acaebd67cf   5 hours ago      672MB
+spring-boot-docker/springimage   latest    e8acaebd67cf   5 hours ago      672MB
+alpine/git                       latest    b80d2cac43e4   2 days ago       43.6MB
+docker/getting-started           latest    cb90f98fd791   6 months ago     28.8MB
+root@DESKTOP-F572NSO:~/Docker# docker swarm init
+Swarm initialized: current node (htot335stt6ozwoe3m7ddt54d) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-1gwigwb0ryu4kzfkmi38dvdqzoldktbomklnwf67iywepekljz-6lgg9zf84a4qy1x6otoj83e57 192.168.65.3:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+root@DESKTOP-F572NSO:~/Docker# docker node ls
+ID                            HOSTNAME         STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION
+htot335stt6ozwoe3m7ddt54d *   docker-desktop   Ready     Active         Leader           20.10.17
+root@DESKTOP-F572NSO:~/Docker# docker service create -p 80:80 --name webserver phpcode
+image phpcode:latest could not be accessed on a registry to record
+its digest. Each node will access phpcode:latest independently,
+possibly leading to different nodes running different
+versions of the image.
+
+54qjcg3plprynsxbhj1x958kc
+overall progress: 1 out of 1 tasks
+1/1: running
+verify: Service converged
+root@DESKTOP-F572NSO:~/Docker# docker service ls
+ID             NAME        MODE         REPLICAS   IMAGE            PORTS
+54qjcg3plpry   webserver   replicated   1/1        phpcode:latest   *:80->80/tcp
+root@DESKTOP-F572NSO:~/Docker# curl localhost
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Simple PHP App</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+        <style>body {margin-top: 40px; background-color: #333;}</style>
+        <link href="assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+        <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="hero-unit">
+                <h1>Simple PHP App</h1>
+                <h2>Congratulations</h2>
+                <p>Your PHP application is now running on a container in Docker Swarm</p>
+                <p>The Kubernetes Docker container is running on 155ec134b468 with PHP version 8.1.2.</p>
+                root@DESKTOP-F572NSO:~/Docker#
